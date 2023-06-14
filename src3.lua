@@ -618,6 +618,7 @@ function Library:create(options)
 		core:tween({Size = UDim2.new()}, function()
 			gui.AbsoluteObject:Destroy()
 		end)
+        getgenv().AlreadyExecuted = false
 	end
 
 	if getgenv then
