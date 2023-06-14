@@ -149,7 +149,6 @@ function Library:object(class, properties)
         getgenv().ToggleBool = Instance.new("BoolValue", localObject)
         getgenv().ToggleBool.Value = true
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
-		print("ye")
             if getgenv().ToggleBool.Value == true then
                 game:GetService("UserInputService").MouseIconEnabled = true
                 for i, v in pairs(getgenv().MainUI:GetDescendants()) do
@@ -392,6 +391,8 @@ function Library:object(class, properties)
 end
 
 function Library:show(state)
+    getgenv().ToggleBool.Value = state
+    game:GetService("UserInputService").MouseIconEnabled = state
 	self.Toggled = state
 	self.mainFrame.ClipsDescendants = true
 	if state then
@@ -1378,12 +1379,8 @@ function Library:toggle(options)
 	local function toggle()
 		toggled = not toggled
 		if toggled then
-            getgenv().ToggleBool.Value = false
-            game:GetService("UserInputService").MouseIconEnabled = false
 			offIcon:crossfade(onIcon, 0.1)
 		else
-            getgenv().ToggleBool.Value = true
-            game:GetService("UserInputService").MouseIconEnabled = true
 			onIcon:crossfade(offIcon, 0.1)
 		end
 		options.Callback(toggled)
