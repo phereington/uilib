@@ -1349,11 +1349,13 @@ function Library:toggle(options)
 		if toggled then
 			offIcon:crossfade(onIcon, 0.1)
             if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.Default then
+                game:GetService("UserInputService").MouseIconEnabled = false
                 game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.LockCenter
             end
 		else
 			onIcon:crossfade(offIcon, 0.1)
             if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.LockCenter then
+                game:GetService("UserInputService").MouseIconEnabled = true
                 game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
             end
 		end
