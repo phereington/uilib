@@ -626,6 +626,7 @@ function Library:create(options)
 	end
 
 	closeButton.MouseButton1Click:connect(function()
+		getgenv().AlreadyExecuted = false
 		closeUI()
 	end)
 
