@@ -138,6 +138,34 @@ end
 function Library:object(class, properties)
 	local localObject = Instance.new(class)
 
+    if class == "ScreenGui" then
+        getgenv().MainUI = localObject
+        game:GetService("UserInputService").MouseIconEnabled = true
+        for i, v in pairs(getgenv().MainUI:GetDescendants()) do
+            pcall(function()
+                v.Modal = true
+            end)
+        end
+        getgenv().ToggleBool = Instance.new("BoolValue", localObject)
+        getgenv().ToggleBool.Value = true
+        getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
+            if getgenv().ToggleBool.Value == true then
+                game:GetService("UserInputService").MouseIconEnabled = true
+                for i, v in pairs(getgenv().MainUI:GetDescendants()) do
+                    pcall(function()
+                        v.Modal = true
+                    end)
+                end
+            else
+                game:GetService("UserInputService").MouseIconEnabled = false
+                for i, v in pairs(getgenv().MainUI:GetDescendants()) do
+                    pcall(function()
+                        v.Modal = false
+                    end)
+                end
+            end
+        end)
+    end
 	local forcedProps = {
 		BorderSizePixel = 0,
 		AutoButtonColor = false,
@@ -1349,20 +1377,12 @@ function Library:toggle(options)
 	local function toggle()
 		toggled = not toggled
 		if toggled then
+            getgenv().ToggleBool.Value = false
             game:GetService("UserInputService").MouseIconEnabled = false
-            for i, v in pairs(getgenv().guimain:GetDescendants) do
-                pcall(function()
-                    v.Modal = false
-                end)
-            end
 			offIcon:crossfade(onIcon, 0.1)
 		else
+            getgenv().ToggleBool.Value = true
             game:GetService("UserInputService").MouseIconEnabled = true
-            for i, v in pairs(getgenv().guimain:GetDescendants) do
-                pcall(function()
-                    v.Modal = true
-                end)
-            end
 			onIcon:crossfade(offIcon, 0.1)
 		end
 		options.Callback(toggled)
