@@ -149,6 +149,13 @@ function Library:object(class, properties)
         end
         getgenv().ToggleBool = Instance.new("BoolValue", localObject)
         getgenv().ToggleBool.Value = false
+        getgenv().MouseForce = game:GetService("RunService").RenderStepped:Connect(function()
+            if getgenv().ToggleBool.Value == true then
+                game:GetService("UserInputService").MouseIconEnabled = true
+            else
+                game:GetService("UserInputService").MouseIconEnabled = false
+            end
+        end)
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
             if getgenv().ToggleBool.Value == true then
                 game:GetService("UserInputService").MouseIconEnabled = true
@@ -613,6 +620,7 @@ function Library:create(options)
 	end)
 
 	local function closeUI()
+        getgenv().MouseForce:Disconnect()
 		core.ClipsDescendants = true
 		core:fade(true)
 		wait(0.1)
