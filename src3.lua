@@ -460,12 +460,6 @@ function Library:create(options)
 		ZIndexBehavior = Enum.ZIndexBehavior.Global
 	})
 
-    gui.DescendantAdded:Connect(function(uipart)
-        pcall(function()
-            uipart.Modal = true
-        end)
-    end)
-
 	local notificationHolder = gui:object("Frame", {
 		AnchorPoint = Vector2.new(1, 1),
 		BackgroundTransparency = 1,
@@ -1353,11 +1347,20 @@ function Library:toggle(options)
 	local function toggle()
 		toggled = not toggled
 		if toggled then
-			offIcon:crossfade(onIcon, 0.1)
-            if getgenv().MouseForce then
-                getgenv().MouseForce:Disconnect()
+            game:GetService("UserInputService").MouseIconEnabled = false
+            for i, v in pairs(gui:GetDescendants) do
+                pcall(function()
+                    v.Modal = false
+                end)
             end
+			offIcon:crossfade(onIcon, 0.1)
 		else
+            game:GetService("UserInputService").MouseIconEnabled = true
+            for i, v in pairs(gui:GetDescendants) do
+                pcall(function()
+                    v.Modal = true
+                end)
+            end
 			onIcon:crossfade(offIcon, 0.1)
 		end
 		options.Callback(toggled)
