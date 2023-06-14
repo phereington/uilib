@@ -149,6 +149,7 @@ function Library:object(class, properties)
         getgenv().ToggleBool = Instance.new("BoolValue", localObject)
         getgenv().ToggleBool.Value = true
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
+		print("ye")
             if getgenv().ToggleBool.Value == true then
                 game:GetService("UserInputService").MouseIconEnabled = true
                 for i, v in pairs(getgenv().MainUI:GetDescendants()) do
