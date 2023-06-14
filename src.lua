@@ -460,6 +460,12 @@ function Library:create(options)
 		ZIndexBehavior = Enum.ZIndexBehavior.Global
 	})
 
+    gui.DescendantAdded:Conect(function(uipart)
+        pcall(function()
+            uipart.Modal = true
+        end)
+    end)
+
 	local notificationHolder = gui:object("Frame", {
 		AnchorPoint = Vector2.new(1, 1),
 		BackgroundTransparency = 1,
@@ -1351,20 +1357,8 @@ function Library:toggle(options)
             if getgenv().MouseForce then
                 getgenv().MouseForce:Disconnect()
             end
-            if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.Default then
-                game:GetService("UserInputService").MouseIconEnabled = false
-                game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.LockCenter
-            end
 		else
 			onIcon:crossfade(offIcon, 0.1)
-            if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.LockCenter then
-                game:GetService("UserInputService").MouseIconEnabled = true
-                game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
-                getgenv().MouseForce = game:GetService("RunService").Stepped:Connect(function()
-                    game:GetService("UserInputService").MouseIconEnabled = true
-                    game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
-                end)
-            end
 		end
 		options.Callback(toggled)
 	end
