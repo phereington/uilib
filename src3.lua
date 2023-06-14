@@ -141,7 +141,7 @@ function Library:object(class, properties)
 
     if class == "ScreenGui" then
         getgenv().MainUI = localObject
-        game:GetService("UserInputService").MouseIconEnabled = true
+        game:GetService("UserInputService").MouseIconEnabled = false
         for i, v in pairs(getgenv().MainUI:GetDescendants()) do
             pcall(function()
                 v.Modal = false
@@ -616,6 +616,13 @@ function Library:create(options)
 		core.ClipsDescendants = true
 		core:fade(true)
 		wait(0.1)
+        game:GetService("UserInputService").MouseIconEnabled = false
+        for i, v in pairs(getgenv().MainUI:GetDescendants()) do
+            pcall(function()
+                v.Modal = false
+            end)
+        end
+        getgenv().ToggleBool.Value = false
 		core:tween({Size = UDim2.new()}, function()
 			gui.AbsoluteObject:Destroy()
 		end)
