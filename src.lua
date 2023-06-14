@@ -1,9 +1,4 @@
-if getgenv().HubOpened then
-    if getgenv().HubOpened == true then
-        return
-    end
-end
-
+if not getgenv().HubOpened then
 getgenv().HubOpened = true
 
 local TweenService = game:GetService("TweenService")
@@ -3547,3 +3542,4 @@ return setmetatable(Library, {
 		return rawget(Library, i:lower())
 	end
 })
+end
