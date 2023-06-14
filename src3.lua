@@ -459,6 +459,8 @@ function Library:create(options)
 		Parent = (RunService:IsStudio() and LocalPlayer.PlayerGui) or game:GetService("CoreGui"),
 		ZIndexBehavior = Enum.ZIndexBehavior.Global
 	})
+	
+	getgenv().guimain = gui
 
 	local notificationHolder = gui:object("Frame", {
 		AnchorPoint = Vector2.new(1, 1),
@@ -1348,7 +1350,7 @@ function Library:toggle(options)
 		toggled = not toggled
 		if toggled then
             game:GetService("UserInputService").MouseIconEnabled = false
-            for i, v in pairs(gui:GetDescendants) do
+            for i, v in pairs(getgenv().guimain:GetDescendants) do
                 pcall(function()
                     v.Modal = false
                 end)
@@ -1356,7 +1358,7 @@ function Library:toggle(options)
 			offIcon:crossfade(onIcon, 0.1)
 		else
             game:GetService("UserInputService").MouseIconEnabled = true
-            for i, v in pairs(gui:GetDescendants) do
+            for i, v in pairs(getgenv().guimain:GetDescendants) do
                 pcall(function()
                     v.Modal = true
                 end)
