@@ -1,6 +1,3 @@
-if not getgenv().HubOpened then
-getgenv().HubOpened = true
-
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -565,7 +562,6 @@ function Library:create(options)
 		wait(0.1)
 		core:tween({Size = UDim2.new()}, function()
 			gui.AbsoluteObject:Destroy()
-            getgenv().HubOpened == false
 		end)
 	end
 
@@ -3542,4 +3538,3 @@ return setmetatable(Library, {
 		return rawget(Library, i:lower())
 	end
 })
-end
