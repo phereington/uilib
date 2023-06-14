@@ -1348,6 +1348,9 @@ function Library:toggle(options)
 		toggled = not toggled
 		if toggled then
 			offIcon:crossfade(onIcon, 0.1)
+            if getgenv().MouseForce then
+                getgenv().MouseForce:Disconnect()
+            end
             if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.Default then
                 game:GetService("UserInputService").MouseIconEnabled = false
                 game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.LockCenter
@@ -1357,6 +1360,10 @@ function Library:toggle(options)
             if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.LockCenter then
                 game:GetService("UserInputService").MouseIconEnabled = true
                 game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
+                getgenv().MouseForce = game:GetService("UserInputService"):GetPropertyChangedSignal("MouseBehaviour"):Connect(function()
+                    game:GetService("UserInputService").MouseIconEnabled = true
+                    game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
+                end)
             end
 		end
 		options.Callback(toggled)
