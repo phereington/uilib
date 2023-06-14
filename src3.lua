@@ -28,6 +28,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
+local showcount = 0
 
 local Library = {
 	Themes = {
@@ -79,7 +80,7 @@ local Library = {
 		Legacy = 0,
 		Modern = 1
 	},
-	Toggled = true,
+	Toggled = false,
 	ThemeObjects = {
 		Main = {},
 		Secondary = {},
@@ -143,11 +144,11 @@ function Library:object(class, properties)
         game:GetService("UserInputService").MouseIconEnabled = true
         for i, v in pairs(getgenv().MainUI:GetDescendants()) do
             pcall(function()
-                v.Modal = true
+                v.Modal = false
             end)
         end
         getgenv().ToggleBool = Instance.new("BoolValue", localObject)
-        getgenv().ToggleBool.Value = true
+        getgenv().ToggleBool.Value = false
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
             if getgenv().ToggleBool.Value == true then
                 game:GetService("UserInputService").MouseIconEnabled = true
@@ -626,7 +627,6 @@ function Library:create(options)
 	end
 
 	closeButton.MouseButton1Click:connect(function()
-		getgenv().AlreadyExecuted = false
 		closeUI()
 	end)
 
