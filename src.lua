@@ -1360,7 +1360,7 @@ function Library:toggle(options)
             if game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.LockCenter then
                 game:GetService("UserInputService").MouseIconEnabled = true
                 game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
-                getgenv().MouseForce = game:GetService("UserInputService"):GetPropertyChangedSignal("MouseBehaviour"):Connect(function()
+                getgenv().MouseForce = game:GetService("RunService").Stepped:Connect(function()
                     game:GetService("UserInputService").MouseIconEnabled = true
                     game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
                 end)
