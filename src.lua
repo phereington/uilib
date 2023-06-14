@@ -460,7 +460,7 @@ function Library:create(options)
 		ZIndexBehavior = Enum.ZIndexBehavior.Global
 	})
 
-    gui.DescendantAdded:Conect(function(uipart)
+    gui.DescendantAdded:Connect(function(uipart)
         pcall(function()
             uipart.Modal = true
         end)
