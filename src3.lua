@@ -30,19 +30,6 @@ local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 local showcount = 0
 
-	--getgenv().circle = Drawing.new("Circle")
-	--getgenv().circle.Thickness = 1
-	--getgenv().circle.NumSides = 30
-	--getgenv().circle.Radius = 5
-	--getgenv().circle.Filled = true
-	--getgenv().circle.Color = Color3.new(255,255,255)
-	--getgenv().circle.Transparency = 0.5
-	--getgenv().circle.Visible = true
-
-	game:GetService("RunService").RenderStepped:Connect(function()
-   	--getgenv().circle.Position = Vector2.new(Mouse.X,Mouse.Y + 36)
-	end)
-
 local Library = {
 	Themes = {
 		Legacy = {
@@ -154,7 +141,7 @@ function Library:object(class, properties)
 
     if class == "ScreenGui" then
         getgenv().MainUI = localObject
-        --getgenv().circle.Visible = false
+        game:GetService("UserInputService").MouseIconEnabled = false
         for i, v in pairs(getgenv().MainUI:GetDescendants()) do
             pcall(function()
                 v.Modal = false
@@ -164,21 +151,21 @@ function Library:object(class, properties)
         getgenv().ToggleBool.Value = false
         getgenv().MouseForce = game:GetService("RunService").RenderStepped:Connect(function()
             if getgenv().ToggleBool.Value == true then
-                --getgenv().circle.Visible = true
+                game:GetService("UserInputService").MouseIconEnabled = true
             else
-                --getgenv().circle.Visible = false
+                game:GetService("UserInputService").MouseIconEnabled = false
             end
         end)
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
             if getgenv().ToggleBool.Value == true then
-                --getgenv().circle.Visible = true
+                game:GetService("UserInputService").MouseIconEnabled = true
                 for i, v in pairs(getgenv().MainUI:GetDescendants()) do
                     pcall(function()
                         v.Modal = true
                     end)
                 end
             else
-                --getgenv().circle.Visible = false
+                game:GetService("UserInputService").MouseIconEnabled = false
                 for i, v in pairs(getgenv().MainUI:GetDescendants()) do
                     pcall(function()
                         v.Modal = false
@@ -413,7 +400,7 @@ end
 
 function Library:show(state)
     getgenv().ToggleBool.Value = state
-    --getgenv().circle.Visible = state
+    game:GetService("UserInputService").MouseIconEnabled = state
 	self.Toggled = state
 	self.mainFrame.ClipsDescendants = true
 	if state then
@@ -637,7 +624,7 @@ function Library:create(options)
 		core.ClipsDescendants = true
 		core:fade(true)
 		wait(0.1)
-        --getgenv().circle.Visible = false
+        game:GetService("UserInputService").MouseIconEnabled = false
         for i, v in pairs(getgenv().MainUI:GetDescendants()) do
             pcall(function()
                 v.Modal = false
