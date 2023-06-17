@@ -30,7 +30,6 @@ local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 local showcount = 0
 
-if not getgenv().Circle then
 	getgenv().Circle = Drawing.new("Circle")
 	getgenv().Circle.Thickness = 1
 	getgenv().Circle.NumSides = 30
@@ -43,7 +42,6 @@ if not getgenv().Circle then
 	game:GetService("RunService").RenderStepped:Connect(function()
    	getgenv().Circle.Position = Vector2.new(Mouse.X,Mouse.Y + 36)
 	end)
-end
 
 local Library = {
 	Themes = {
