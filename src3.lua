@@ -95,7 +95,7 @@ local Library = {
 		Legacy = 0,
 		Modern = 1
 	},
-	Toggled = false,
+	Toggled = true,
 	ThemeObjects = {
 		Main = {},
 		Secondary = {},
@@ -156,14 +156,14 @@ function Library:object(class, properties)
 
     if class == "ScreenGui" then
         getgenv().MainUI = localObject
-        getgenv().Circle.Visible = false
+        getgenv().Circle.Visible = true
         for i, v in pairs(getgenv().MainUI:GetDescendants()) do
             pcall(function()
-                v.Modal = false
+                v.Modal = true
             end)
         end
         getgenv().ToggleBool = Instance.new("BoolValue", localObject)
-        getgenv().ToggleBool.Value = false
+        getgenv().ToggleBool.Value = true
         getgenv().MouseForce = game:GetService("RunService").RenderStepped:Connect(function()
             if getgenv().ToggleBool.Value == true then
                 getgenv().Circle.Visible = true
