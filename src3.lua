@@ -164,9 +164,9 @@ function Library:object(class, properties)
         getgenv().ToggleBool.Value = false
         getgenv().MouseForce = game:GetService("RunService").RenderStepped:Connect(function()
             if getgenv().ToggleBool.Value == true then
-                getgenv().Circle.Visible = = true
+                getgenv().Circle.Visible = true
             else
-                getgenv().Circle.Visible = = false
+                getgenv().Circle.Visible = false
             end
         end)
         getgenv().ToggleBool:GetPropertyChangedSignal("Value"):Connect(function()
