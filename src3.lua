@@ -7,6 +7,11 @@ local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 local showcount = 0
 
+
+if not getgenv().Connections then
+    getgenv().Connections = {}
+end
+
 if not getgenv().Circle then
     getgenv().Circle = Drawing.new("Circle")
     getgenv().Circle.Thickness = 1
@@ -85,7 +90,7 @@ local Library = {
 	DisplayName = nil,
 	DragSpeed = 0.06,
 	LockDragging = false,
-	ToggleKey = Enum.KeyCode.Home,
+	ToggleKey = Enum.KeyCode.Delete,
 	UrlLabel = nil,
 	Url = nil
 
@@ -634,6 +639,12 @@ function Library:create(options)
 	end
 
 	closeButton.MouseButton1Click:connect(function()
+        for i, v in pairs(getgenv().Connections) do
+            pcall(function()
+                v:Disonnect()
+                table.remove(getgenv().Connections, i)
+            end)
+        end
 		closeUI()
 	end)
 
@@ -3089,29 +3100,29 @@ function Library:keybind(options)
 		local down = false
 		local listening = false
 
-		keybindContainer.MouseEnter:connect(function()
+		table.insert(getgenv().Connections, keybindContainer.MouseEnter:connect(function()
 			hovered = true
 			keybindContainer:tween{BackgroundColor3 = self:lighten(Library.CurrentTheme.Secondary, 10)}
-		end)
+		end))
 
-		keybindContainer.MouseLeave:connect(function()
+		table.insert(getgenv().Connections, keybindContainer.MouseLeave:connect(function()
 			hovered = false
 			if not down then
 				keybindContainer:tween{BackgroundColor3 = Library.CurrentTheme.Secondary}
 			end
-		end)
+		end))
 
-		keybindContainer.MouseButton1Down:connect(function()
+		table.insert(getgenv().Connections, keybindContainer.MouseButton1Down:connect(function()
 			keybindContainer:tween{BackgroundColor3 = self:lighten(Library.CurrentTheme.Secondary, 20)}
-		end)
+		end))
 
-		UserInputService.InputEnded:connect(function(key)
+		table.insert(getgenv().Connections, UserInputService.InputEnded:connect(function(key)
 			if key.UserInputType == Enum.UserInputType.MouseButton1 then
 				keybindContainer:tween{BackgroundColor3 = (hovered and self:lighten(Library.CurrentTheme.Secondary)) or Library.CurrentTheme.Secondary}
 			end
-		end)
+		end))
 
-		UserInputService.InputBegan:Connect(function(key, gameProcessed)
+		table.insert(getgenv().Connections, UserInputService.InputBegan:Connect(function(key, gameProcessed)
 			if listening and not UserInputService:GetFocusedTextBox() then
 				if key.UserInputType == Enum.UserInputType.Keyboard then
 					if key.KeyCode ~= Enum.KeyCode.Escape then
@@ -3126,11 +3137,11 @@ function Library:keybind(options)
 					options.Callback()
 				end
 			end
-		end)
+		end))
 
-		keybindContainer.MouseButton1Click:connect(function()
+		table.insert(getgenv().Connections, keybindContainer.MouseButton1Click:connect(function()
 			if not listening then listening = true; keybindDisplay.Text = "..." end
-		end)
+		end))
 	end
 	self:_resize_tab()
 
