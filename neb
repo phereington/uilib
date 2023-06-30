@@ -1,0 +1,1086 @@
+local Library = {}
+
+local Tween = game:GetService("TweenService")
+
+Library.Ripple = function(Button)
+	coroutine.wrap(function()
+
+		Button.ClipsDescendants = true
+
+		local Circle = Instance.new("ImageLabel")
+		Circle.Name = "Circle"
+		Circle.ZIndex = 10
+		Circle.BackgroundTransparency = 1
+		Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Circle.ImageTransparency = 0.9
+		Circle.ImageColor3 = Color3.fromRGB(0, 0, 0)
+		Circle.Image = "rbxassetid://266543268"
+		Circle.Parent = Button
+		Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+		Circle.Position = UDim2.new(0.5, 0, 0.5, 0)
+
+		local Size = 0
+		if Button.AbsoluteSize.X > Button.AbsoluteSize.Y then
+			Size = Button.AbsoluteSize.X*1.5
+		elseif Button.AbsoluteSize.X < Button.AbsoluteSize.Y then
+			Size = Button.AbsoluteSize.Y*1.5
+		elseif Button.AbsoluteSize.X == Button.AbsoluteSize.Y then																										Size = Button.AbsoluteSize.X*1.5
+		end
+
+		local Time = 0.5
+		Tween:Create(Circle, TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, Size, 0, Size)}):Play()
+		for i=1,10 do
+			Circle.ImageTransparency = Circle.ImageTransparency + 0.01
+			wait(Time/10)
+		end
+		Circle:Destroy()
+
+	end)()
+end
+
+function Library:new(TitleText, LogoId, Keybind)
+	local UILibrary = Instance.new("ScreenGui", game.CoreGui)
+	UILibrary.Name = "NebulaLibrary" .. game:GetService("HttpService"):GenerateGUID(false)
+	UILibrary.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	
+	local ToggleUI
+	
+	ToggleUI = game:GetService("UserInputService").InputBegan:Connect(function(inp)
+        if inp.KeyCode == (Keybind or Enum.KeyCode.Insert) then
+            if UILibrary.Parent == nil then ToggleUI:Disconnect() end
+            UILibrary.Enabled = not UILibrary.Enabled
+        end
+    end)
+
+	local Sidebar = Instance.new("Frame")
+	Sidebar.Name = "Sidebar"
+	Sidebar.Size = UDim2.new(0, 60, 0, 400)
+	Sidebar.BackgroundTransparency = 0.35
+	Sidebar.BorderSizePixel = 0
+	Sidebar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Sidebar.Parent = UILibrary
+
+	local UICorner = Instance.new("UICorner")
+	UICorner.Parent = Sidebar
+
+	local Logo = Instance.new("ImageLabel")
+	Logo.Name = "Logo"
+	Logo.AnchorPoint = Vector2.new(0.5, 0)
+	Logo.Size = UDim2.new(0, 35, 0, 35)
+	Logo.BackgroundTransparency = 1
+	Logo.Position = UDim2.new(0.5, 0, 0, 10)
+	Logo.BorderSizePixel = 0
+	Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Logo.ScaleType = Enum.ScaleType.Fit
+	Logo.SliceScale = 0.5
+	Logo.Image = "rbxassetid://" .. (LogoId or "7072715827")
+	Logo.SliceCenter = Rect.new(0, 0, 512, 512)
+	Logo.Parent = Sidebar
+
+	local Line = Instance.new("Frame")
+	Line.Name = "Line"
+	Line.AnchorPoint = Vector2.new(0.5, 0)
+	Line.Size = UDim2.new(1, -10, 0, 2)
+	Line.Position = UDim2.new(0.5, 0, 0, 55)
+	Line.BorderSizePixel = 0
+	Line.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
+	Line.Parent = Sidebar
+
+	local TabButtons = Instance.new("ScrollingFrame")
+	TabButtons.Name = "TabButtons"
+	TabButtons.AnchorPoint = Vector2.new(0.5, 1)
+	TabButtons.Size = UDim2.new(1, 0, 1, -55)
+	TabButtons.BackgroundTransparency = 1
+	TabButtons.Position = UDim2.new(0.5, 0, 1, 0)
+	TabButtons.Active = true
+	TabButtons.BorderSizePixel = 0
+	TabButtons.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TabButtons.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	TabButtons.CanvasSize = UDim2.new(0, 0, 0, 0)
+	TabButtons.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+	TabButtons.ScrollBarImageTransparency = 1
+	TabButtons.ScrollBarThickness = 0
+	TabButtons.Parent = Sidebar
+
+	local UIListLayout = Instance.new("UIListLayout")
+	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 5)
+	UIListLayout.Parent = TabButtons
+
+	local UIPadding = Instance.new("UIPadding")
+	UIPadding.PaddingTop = UDim.new(0, 5)
+	UIPadding.PaddingBottom = UDim.new(0, 5)
+	UIPadding.Parent = TabButtons
+
+	local UIListLayout1 = Instance.new("UIListLayout")
+	UIListLayout1.FillDirection = Enum.FillDirection.Horizontal
+	UIListLayout1.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIListLayout1.VerticalAlignment = Enum.VerticalAlignment.Center
+	UIListLayout1.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout1.Padding = UDim.new(0, 10)
+	UIListLayout1.Parent = UILibrary
+
+	local Main = Instance.new("Frame")
+	Main.Name = "Main"
+	Main.Size = UDim2.new(0, 600, 0, 400)
+	Main.BackgroundTransparency = 0.35
+	Main.BorderSizePixel = 0
+	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Main.Parent = UILibrary
+
+	local UICorner1 = Instance.new("UICorner")
+	UICorner1.Parent = Main
+
+	local Header = Instance.new("Frame")
+	Header.Name = "Header"
+	Header.Size = UDim2.new(1, 0, 0, 40)
+	Header.ClipsDescendants = true
+	Header.BackgroundTransparency = 0.45
+	Header.BorderSizePixel = 0
+	Header.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Header.Parent = Main
+
+	local UICorner2 = Instance.new("UICorner")
+	UICorner2.Parent = Header
+
+	local Topbar = Instance.new("Frame")
+	Topbar.Name = "Topbar"
+	Topbar.Size = UDim2.new(0, 100, 1, 0)
+	Topbar.BorderSizePixel = 0
+	Topbar.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
+	Topbar.Parent = Header
+
+	local UICorner3 = Instance.new("UICorner")
+	UICorner3.Parent = Topbar
+
+	local Right = Instance.new("Frame")
+	Right.Name = "Right"
+	Right.AnchorPoint = Vector2.new(0.5, 0.5)
+	Right.Size = UDim2.new(0.5, 0, 1, 0)
+	Right.Position = UDim2.new(1, 0, 0.5, 0)
+	Right.BorderSizePixel = 0
+	Right.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
+	Right.Parent = Topbar
+
+	local UICorner4 = Instance.new("UICorner")
+	UICorner4.CornerRadius = UDim.new(0, 1000)
+	UICorner4.Parent = Right
+
+	local Title = Instance.new("TextLabel")
+	Title.Name = "Title"
+	Title.Size = UDim2.new(1, 25, 1, 0)
+	Title.BackgroundTransparency = 1
+	Title.BorderSizePixel = 0
+	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title.FontSize = Enum.FontSize.Size18
+	Title.TextSize = 16
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.Text = TitleText or "Unknown"
+	Title.Font = Enum.Font.GothamBold
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+	Title.Parent = Topbar
+
+	local UIPadding1 = Instance.new("UIPadding")
+	UIPadding1.PaddingLeft = UDim.new(0, 10)
+	UIPadding1.PaddingRight = UDim.new(0, 10)
+	UIPadding1.Parent = Title
+
+	local Categories = Instance.new("Frame")
+	Categories.Name = "Categories"
+	Categories.AnchorPoint = Vector2.new(0.5, 1)
+	Categories.Size = UDim2.new(1, 0, 1, -40)
+	Categories.BackgroundTransparency = 1
+	Categories.Position = UDim2.new(0.5, 0, 1, 0)
+	Categories.BorderSizePixel = 0
+	Categories.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Categories.Parent = Main
+
+	local AvatarView = Instance.new("Frame")
+	AvatarView.Name = "AvatarView"
+	AvatarView.Size = UDim2.new(0, 250, 0, 400)
+	AvatarView.BackgroundTransparency = 0.35
+	AvatarView.BorderSizePixel = 0
+	AvatarView.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	AvatarView.Parent = UILibrary
+
+	local UICorner5 = Instance.new("UICorner")
+	UICorner5.Parent = AvatarView
+
+	local ViewportFrame = Instance.new("ViewportFrame")
+	ViewportFrame.Size = UDim2.new(1, 0, 1, -40)
+	ViewportFrame.BackgroundTransparency = 1
+	ViewportFrame.BorderSizePixel = 0
+	ViewportFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ViewportFrame.Parent = AvatarView
+
+	local Viewer = Instance.new("WorldModel")
+	Viewer.Name = "Viewer"
+	Viewer.Parent = ViewportFrame
+	
+	local Camera
+	local Character
+
+	spawn(function()
+		local UserInputService = game:GetService("UserInputService")
+
+		local LocalPlayer = game.Players.LocalPlayer
+		Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+		local MouseIn, HoldIn, CurrentX = false, false, 0
+
+		Camera = Instance.new("Camera", ViewportFrame)
+
+		ViewportFrame.CurrentCamera = Camera
+
+		repeat wait(.205) until game:IsLoaded()
+
+		Character.Archivable = true
+
+		local Clone = Character:Clone()
+
+		Character.Archivable = false
+
+        Clone.Humanoid.Animator:Destroy()
+		Clone.Animate.Disabled, Clone.Parent, Clone.Humanoid.DisplayDistanceType = true, ViewportFrame.Viewer, "None"
+
+		Clone:SetPrimaryPartCFrame(CFrame.new(Vector3.new(0, 0, -5), Vector3.new()))
+
+		Camera.CFrame = CFrame.new(Clone.Humanoid.RootPart.Position + (Clone.Humanoid.RootPart.CFrame.LookVector * 6), Clone.Humanoid.RootPart.Position)
+
+		UserInputService.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				if MouseIn == true then
+					HoldIn = true
+					CurrentX = nil
+				end
+			end
+		end)
+
+		UserInputService.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				HoldIn = false
+			end
+		end)
+
+		ViewportFrame.MouseMoved:Connect(function(X,Y)
+
+			if HoldIn == false then return end
+
+			if CurrentX then Clone.PrimaryPart.CFrame = Clone.PrimaryPart.CFrame * CFrame.fromEulerAnglesXYZ(0,((X-CurrentX)*.025),0) end
+
+			CurrentX = X
+		end)
+
+		ViewportFrame.MouseEnter:Connect(function() MouseIn = true end)
+		ViewportFrame.MouseLeave:Connect(function() MouseIn = false end)
+
+	end)
+
+	local LocalScript = Instance.new("LocalScript")
+	LocalScript.Parent = ViewportFrame
+
+	local Bottombar = Instance.new("Frame")
+	Bottombar.Name = "Bottombar"
+	Bottombar.AnchorPoint = Vector2.new(0.5, 1)
+	Bottombar.Size = UDim2.new(1, 0, 0, 40)
+	Bottombar.ClipsDescendants = true
+	Bottombar.Position = UDim2.new(0.5, 0, 1, 0)
+	Bottombar.BorderSizePixel = 0
+	Bottombar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Bottombar.Parent = AvatarView
+
+	local UICorner6 = Instance.new("UICorner")
+	UICorner6.Parent = Bottombar
+
+	local Widgets = Instance.new("ScrollingFrame")
+	Widgets.Name = "Widgets"
+	Widgets.ZIndex = 2
+	Widgets.Size = UDim2.new(1, 0, 1, 0)
+	Widgets.BackgroundTransparency = 1
+	Widgets.Active = true
+	Widgets.BorderSizePixel = 0
+	Widgets.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Widgets.AutomaticCanvasSize = Enum.AutomaticSize.X
+	Widgets.ScrollingDirection = Enum.ScrollingDirection.X
+	Widgets.CanvasSize = UDim2.new(0, 0, 0, 0)
+	Widgets.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+	Widgets.ScrollBarImageTransparency = 1
+	Widgets.ScrollBarThickness = 0
+	Widgets.Parent = Bottombar
+
+	local UIPadding2 = Instance.new("UIPadding")
+	UIPadding2.PaddingLeft = UDim.new(0, 10)
+	UIPadding2.PaddingRight = UDim.new(0, 10)
+	UIPadding2.Parent = Widgets
+
+	local UIListLayout2 = Instance.new("UIListLayout")
+	UIListLayout2.FillDirection = Enum.FillDirection.Horizontal
+	UIListLayout2.VerticalAlignment = Enum.VerticalAlignment.Center
+	UIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout2.Padding = UDim.new(0, 10)
+	UIListLayout2.Parent = Widgets
+
+	local Frame = Instance.new("Frame")
+	Frame.AnchorPoint = Vector2.new(0.5, 0)
+	Frame.Size = UDim2.new(1, 0, 0, 10)
+	Frame.Position = UDim2.new(0.5, 0, 0, 0)
+	Frame.BorderSizePixel = 0
+	Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Frame.Parent = Bottombar
+
+	local Window = {}
+
+	function Window:Category(Title, Logo)
+		local Tab = Instance.new("TextButton", TabButtons)
+		Tab.AutoButtonColor = false
+		Tab.Text = ""
+		Tab.TextTransparency = 1
+		Tab.Name = Title or "Unknown"
+		Tab.AnchorPoint = Vector2.new(0.5, 0)
+		Tab.Size = UDim2.new(0, 55, 0, 55)
+		Tab.BackgroundTransparency = 1
+		Tab.Position = UDim2.new(0.5, 0, 0, 0)
+		Tab.BorderSizePixel = 0
+		Tab.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
+
+		local Icon = Instance.new("ImageLabel")
+		Icon.Name = "Icon"
+		Icon.AnchorPoint = Vector2.new(0.5, 0)
+		Icon.Size = UDim2.new(0, 20, 0, 20)
+		Icon.BackgroundTransparency = 1
+		Icon.Position = UDim2.new(0.5, 0, 0, 0)
+		Icon.BorderSizePixel = 0
+		Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Icon.ImageTransparency = 0.5
+		Icon.Image = "rbxassetid://" .. (Logo or "7072717560")
+		Icon.Parent = Tab
+
+		local Label = Instance.new("TextLabel")
+		Label.Name = "Label"
+		Label.AnchorPoint = Vector2.new(0.5, 1)
+		Label.Size = UDim2.new(1, 0, 0, 10)
+		Label.BackgroundTransparency = 1
+		Label.Position = UDim2.new(0.5, 0, 1, 0)
+		Label.BorderSizePixel = 0
+		Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Label.FontSize = Enum.FontSize.Size14
+		Label.TextTransparency = 0.5
+		Label.TextSize = 14
+		Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Label.Text = Title or "Unknown"
+		Label.Font = Enum.Font.Gotham
+		Label.Parent = Tab
+
+		local UIPadding = Instance.new("UIPadding")
+		UIPadding.PaddingTop = UDim.new(0, 10)
+		UIPadding.PaddingBottom = UDim.new(0, 10)
+		UIPadding.PaddingLeft = UDim.new(0, 10)
+		UIPadding.PaddingRight = UDim.new(0, 10)
+		UIPadding.Parent = Tab
+
+		local UICorner = Instance.new("UICorner")
+		UICorner.CornerRadius = UDim.new(0, 6)
+		UICorner.Parent = Tab
+
+		local UIListLayout = Instance.new("UIListLayout")
+		UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.Padding = UDim.new(0, 5)
+		UIListLayout.Parent = Tab
+		
+		-- category frame
+		
+		local Category = Instance.new("Frame", Categories)
+		Category.Name = "Category" .. (Title or "Unknown")
+		Category.Size = UDim2.new(1, 0, 1, 0)
+		Category.BackgroundTransparency = 1
+		Category.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Category.Visible = false
+
+		local Tabs = Instance.new("Frame")
+		Tabs.Name = "Tabs"
+		Tabs.Size = UDim2.new(1, 0, 1, 0)
+		Tabs.ClipsDescendants = true
+		Tabs.BackgroundTransparency = 1
+		Tabs.BorderSizePixel = 0
+		Tabs.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Tabs.Parent = Category
+
+		local Buttons = Instance.new("ScrollingFrame")
+		Buttons.Name = "Buttons"
+		Buttons.Selectable = false
+		Buttons.AnchorPoint = Vector2.new(1, 0)
+		Buttons.Size = UDim2.new(1, -125, 0, 40)
+		Buttons.BackgroundTransparency = 1
+		Buttons.Position = UDim2.new(1, 0, -0.111, 0)
+		Buttons.BorderSizePixel = 0
+		Buttons.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Buttons.AutomaticCanvasSize = Enum.AutomaticSize.XY
+		Buttons.ScrollingDirection = Enum.ScrollingDirection.X
+		Buttons.CanvasSize = UDim2.new(0, 0, 0, 0)
+		Buttons.ScrollBarImageTransparency = 1
+		Buttons.ScrollBarThickness = 0
+		Buttons.Parent = Category
+
+		local UIPadding = Instance.new("UIPadding")
+		UIPadding.PaddingLeft = UDim.new(0, 10)
+		UIPadding.PaddingRight = UDim.new(0, 10)
+		UIPadding.Parent = Buttons
+
+		local UIListLayout = Instance.new("UIListLayout")
+		UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+		UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.Padding = UDim.new(0, 10)
+		UIListLayout.Parent = Buttons
+
+		Tab.MouseEnter:Connect(function()
+			Tween:Create(Icon, TweenInfo.new(0.35), {ImageTransparency = 0}):Play()
+			Tween:Create(Label, TweenInfo.new(0.35), {TextTransparency = 0}):Play()
+		end)
+
+		Tab.MouseLeave:Connect(function()
+			Tween:Create(Icon, TweenInfo.new(0.35), {ImageTransparency = 0.5}):Play()
+			Tween:Create(Label, TweenInfo.new(0.35), {TextTransparency = 0.5}):Play()
+		end)
+
+		Tab.MouseButton1Click:Connect(function()
+			for _, Button in pairs(TabButtons:GetChildren()) do
+				if Button:IsA("TextButton") then
+					Tween:Create(Button, TweenInfo.new(0.35), {BackgroundTransparency = 1}):Play()
+				end
+			end
+			
+			for _, CategoryFrame in pairs(Categories:GetChildren()) do
+				if CategoryFrame:IsA("Frame") then
+					CategoryFrame.Visible = false
+				end
+			end
+
+			Tween:Create(Tab, TweenInfo.new(0.35), {BackgroundTransparency = 0}):Play()
+			
+			Category.Visible = true
+		end)
+		
+		local CategoryFuncs = {}
+		
+		function CategoryFuncs:Tab(Title)
+			local Button = Instance.new("TextButton", Buttons)
+			Button.AutoButtonColor = false
+			Button.Name = "Button" .. (Title or "Unknown")
+			Button.Text = (Title or "Unknown")
+			Button.AutomaticSize = Enum.AutomaticSize.X
+			Button.Size = UDim2.new(0, 80, 0, 25)
+			Button.BorderSizePixel = 0
+			Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			Button.AutoButtonColor = false
+			Button.FontSize = Enum.FontSize.Size14
+			Button.TextSize = 14
+			Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Button.Font = Enum.Font.GothamMedium
+
+			local UICorner = Instance.new("UICorner")
+			UICorner.CornerRadius = UDim.new(0, 1000)
+			UICorner.Parent = Button
+
+			local UIStroke = Instance.new("UIStroke")
+			UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			UIStroke.Color = Color3.fromRGB(60, 60, 60)
+			UIStroke.Parent = Button
+			
+			local MainTabsFrame = Instance.new("ScrollingFrame",Tabs)
+			MainTabsFrame.Name = "MainTabsFrame" .. (Title or "Unknown")
+			MainTabsFrame.Selectable = false
+			MainTabsFrame.Size = UDim2.new(1, 0, 1, 0)
+			MainTabsFrame.BackgroundTransparency = 1
+			MainTabsFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			MainTabsFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+			MainTabsFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+			MainTabsFrame.ScrollBarImageTransparency = 1
+			MainTabsFrame.ScrollBarThickness = 0
+			MainTabsFrame.Visible = false
+
+			local UIPadding = Instance.new("UIPadding")
+			UIPadding.PaddingTop = UDim.new(0, 10)
+			UIPadding.PaddingBottom = UDim.new(0, 10)
+			UIPadding.PaddingLeft = UDim.new(0, 10)
+			UIPadding.PaddingRight = UDim.new(0, 10)
+			UIPadding.Parent = MainTabsFrame
+
+			local UIListLayout = Instance.new("UIListLayout")
+			UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			UIListLayout.Padding = UDim.new(0, 10)
+			UIListLayout.Parent = MainTabsFrame
+
+			Button.MouseButton1Click:Connect(function()
+				for _, Button in pairs(Buttons:GetChildren()) do
+					if Button:IsA("TextButton") then
+						Tween:Create(Button:FindFirstChild("UIStroke"), TweenInfo.new(0.35), {Color = Color3.fromRGB(60, 60, 60)}):Play()
+					end
+				end
+				
+				for _, TabFrame in pairs(Tabs:GetChildren()) do
+					if TabFrame:IsA("ScrollingFrame") then
+						TabFrame.Visible = false
+					end
+				end
+				
+				Tween:Create(Button:FindFirstChild("UIStroke"), TweenInfo.new(0.35), {Color = Color3.fromRGB(85, 85, 255)}):Play()
+				
+				MainTabsFrame.Visible = true
+			end)
+			
+			local TabFuncs = {}
+			
+			function TabFuncs:Button(TitleT, Callback)
+				local Button = Instance.new("Frame", MainTabsFrame)
+				Button.Name = "Button" .. (TitleT or "Unknown")
+				Button.AnchorPoint = Vector2.new(0.5, 0)
+				Button.Size = UDim2.new(1, 0, 0, 35)
+				Button.Position = UDim2.new(0.5, 0, 0, 0)
+				Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Button
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Button
+
+				local Title = Instance.new("TextButton")
+				Title.Name = TitleT or "Unknown"
+				Title.Selectable = false
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.Active = false
+				Title.BorderSizePixel = 0
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextTransparency = 0.5
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Text = TitleT or "Unknown"
+				Title.Font = Enum.Font.GothamMedium
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+				Title.Parent = Button
+
+				local Image = Instance.new("ImageLabel")
+				Image.Name = "Image"
+				Image.AnchorPoint = Vector2.new(1, 0.5)
+				Image.Size = UDim2.new(0, 20, 0, 20)
+				Image.BackgroundTransparency = 1
+				Image.Position = UDim2.new(1, 0, 0.5, 0)
+				Image.BorderSizePixel = 0
+				Image.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Image.ImageTransparency = 0.5
+				Image.Image = "rbxassetid://7072719587"
+				Image.Parent = Title
+
+				local UIPadding = Instance.new("UIPadding")
+				UIPadding.PaddingLeft = UDim.new(0, 20)
+				UIPadding.PaddingRight = UDim.new(0, 20)
+				UIPadding.Parent = Title
+				
+				Title.MouseButton1Click:Connect(function()
+					Callback(true)
+					Library.Ripple(Button)
+				end)
+			end
+			
+			function TabFuncs:Axisbox(TitleT, Default, Callback)
+				local Axisbox = Instance.new("Frame", MainTabsFrame)
+				Axisbox.Name = "Axisbox" .. (TitleT or "Unknown")
+				Axisbox.AnchorPoint = Vector2.new(0.5, 0)
+				Axisbox.Size = UDim2.new(1, 0, 0, 40)
+				Axisbox.Position = UDim2.new(0.5, 0, 0, 0)
+				Axisbox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Axisbox
+
+				local Title = Instance.new("TextButton")
+				Title.Name = "Title"
+				Title.Selectable = false
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.Active = false
+				Title.BorderSizePixel = 0
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextTransparency = 0.5
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Text = TitleT or "Unknown"
+				Title.Font = Enum.Font.GothamMedium
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+				Title.Parent = Axisbox
+
+				local UIPadding = Instance.new("UIPadding")
+				UIPadding.PaddingLeft = UDim.new(0, 20)
+				UIPadding.PaddingRight = UDim.new(0, 20)
+				UIPadding.Parent = Title
+
+				local UIListLayout = Instance.new("UIListLayout")
+				UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+				UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+				UIListLayout.Padding = UDim.new(0, 10)
+				UIListLayout.Parent = Title
+
+				local X = Instance.new("TextBox")
+				X.Name = "X"
+				X.ZIndex = 2
+				X.Size = UDim2.new(0, 80, 0, 25)
+				X.ClipsDescendants = true
+				X.BackgroundTransparency = 0.95
+				X.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				X.FontSize = Enum.FontSize.Size14
+				X.PlaceholderColor3 = Color3.fromRGB(255, 0, 0)
+				X.TextSize = 14
+				X.TextColor3 = Color3.fromRGB(255, 0, 0)
+				X.Text = tostring(Default.X)
+				X.PlaceholderText = "X"
+				X.Font = Enum.Font.Gotham
+				X.Parent = Title
+
+				local UIStroke1 = Instance.new("UIStroke")
+				UIStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke1.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke1.Parent = X
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = X
+
+				local Y = Instance.new("TextBox")
+				Y.Name = "Y"
+				Y.Size = UDim2.new(0, 80, 0, 25)
+				Y.BackgroundTransparency = 0.95
+				Y.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Y.FontSize = Enum.FontSize.Size14
+				Y.PlaceholderColor3 = Color3.fromRGB(0, 255, 0)
+				Y.TextSize = 14
+				Y.TextColor3 = Color3.fromRGB(0, 255, 0)
+				Y.Text = tostring(Default.Y)
+				Y.PlaceholderText = "Y"
+				Y.Font = Enum.Font.Gotham
+				Y.Parent = Title
+
+				local UIStroke2 = Instance.new("UIStroke")
+				UIStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke2.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke2.Parent = Y
+
+				local UICorner1 = Instance.new("UICorner")
+				UICorner1.CornerRadius = UDim.new(0, 20)
+				UICorner1.Parent = Y
+
+				local Z = Instance.new("TextBox")
+				Z.Name = "Z"
+				Z.Size = UDim2.new(0, 80, 0, 25)
+				Z.BackgroundTransparency = 0.95
+				Z.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Z.FontSize = Enum.FontSize.Size14
+				Z.PlaceholderColor3 = Color3.fromRGB(0, 0, 255)
+				Z.TextSize = 14
+				Z.TextColor3 = Color3.fromRGB(0, 0, 255)
+				Z.Text = tostring(Default.Z)
+				Z.PlaceholderText = "Z"
+				Z.Font = Enum.Font.Gotham
+				Z.Parent = Title
+
+				local UIStroke3 = Instance.new("UIStroke")
+				UIStroke3.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke3.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke3.Parent = Z
+
+				local UICorner2 = Instance.new("UICorner")
+				UICorner2.CornerRadius = UDim.new(0, 20)
+				UICorner2.Parent = Z
+
+				local UICorner3 = Instance.new("UICorner")
+				UICorner3.CornerRadius = UDim.new(0, 20)
+				UICorner3.Parent = Axisbox
+				
+				local ScrollIncrement = 5
+				
+				local Axis = {X,Y,Z}
+				
+				local LastAxisValue = {
+					X = 0,
+					Y = 0,
+					Z = 0
+				}
+
+				for _, Axises in pairs(Axis) do
+					Axises.FocusLost:Connect(function()
+						if tonumber(Axises.Text) then
+							Axises.Text = tostring(tonumber(Axises.Text))
+							LastAxisValue[Axises.Name] = tonumber(Axises.Text)
+							Callback(Vector3.new(LastAxisValue.X, LastAxisValue.Y, LastAxisValue.Z))
+						else
+							Axises.Text = Default[Axises.Name]
+							LastAxisValue[Axises.Name] = tonumber(Axises.Text)
+							Callback(Vector3.new(LastAxisValue.X, LastAxisValue.Y, LastAxisValue.Z))
+						end
+					end)
+					
+					Axises.MouseWheelForward:Connect(function()
+						LastAxisValue[Axises.Name] = LastAxisValue[Axises.Name] + ScrollIncrement
+						Axises.Text = tostring(LastAxisValue[Axises.Name])
+						Callback(Vector3.new(LastAxisValue.X, LastAxisValue.Y, LastAxisValue.Z))
+					end)
+					
+					Axises.MouseWheelBackward:Connect(function()
+						LastAxisValue[Axises.Name] = LastAxisValue[Axises.Name] - ScrollIncrement
+						Axises.Text = tostring(LastAxisValue[Axises.Name])
+						Callback(Vector3.new(LastAxisValue.X, LastAxisValue.Y, LastAxisValue.Z))
+					end)
+				end
+				
+				local AxisFuncs = {}
+				
+				function AxisFuncs:SetScrollIncrement(Value)
+					ScrollIncrement = tonumber(Value)
+				end
+			end
+			
+			function TabFuncs:Numberbox(TitleT, Default, Callback)
+				local Numberbox = Instance.new("Frame", MainTabsFrame)
+				Numberbox.Name = "Numberbox" .. TitleT or "Unknown"
+				Numberbox.AnchorPoint = Vector2.new(0.5, 0)
+				Numberbox.Size = UDim2.new(1, 0, 0, 40)
+				Numberbox.Position = UDim2.new(0.5, 0, 0, 0)
+				Numberbox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Numberbox
+
+				local Title = Instance.new("TextButton")
+				Title.Name = "Title" .. TitleT or "Unknown"
+				Title.Selectable = false
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.Active = false
+				Title.BorderSizePixel = 0
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextTransparency = 0.5
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Text = TitleT or "Unknown"
+				Title.Font = Enum.Font.GothamMedium
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+				Title.Parent = Numberbox
+
+				local UIPadding = Instance.new("UIPadding")
+				UIPadding.PaddingLeft = UDim.new(0, 20)
+				UIPadding.PaddingRight = UDim.new(0, 20)
+				UIPadding.Parent = Title
+
+				local Numberbox1 = Instance.new("TextBox")
+				Numberbox1.Name = "Numberbox"
+				Numberbox1.Size = UDim2.new(0, 80, 0, 25)
+				Numberbox1.BackgroundTransparency = 0.95
+				Numberbox1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Numberbox1.FontSize = Enum.FontSize.Size14
+				Numberbox1.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+				Numberbox1.TextSize = 14
+				Numberbox1.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Numberbox1.Text = Default or "0"
+				Numberbox1.PlaceholderText = "Number"
+				Numberbox1.Font = Enum.Font.Gotham
+				Numberbox1.Parent = Title
+
+				local UIStroke1 = Instance.new("UIStroke")
+				UIStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke1.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke1.Parent = Numberbox1
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Numberbox1
+
+				local UIListLayout = Instance.new("UIListLayout")
+				UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+				UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+				UIListLayout.Padding = UDim.new(0, 10)
+				UIListLayout.Parent = Title
+
+				local UICorner1 = Instance.new("UICorner")
+				UICorner1.CornerRadius = UDim.new(0, 20)
+				UICorner1.Parent = Numberbox
+				
+				Numberbox1.FocusLost:Connect(function()
+					if tonumber(Numberbox1.Text) then
+						Callback(tonumber(Numberbox1.Text) or 0)
+					else
+						Numberbox1.Text = tostring(Default or 0)
+						Callback(tonumber(Numberbox1.Text) or 0)
+					end
+				end)
+			end
+			
+			function TabFuncs:Textbox(TitleT, Default, Callback)
+				local Textbox = Instance.new("Frame")
+				Textbox.Name = "Textbox" .. TitleT or "Unknown"
+				Textbox.AnchorPoint = Vector2.new(0.5, 0)
+				Textbox.Size = UDim2.new(1, 0, 0, 40)
+				Textbox.Position = UDim2.new(0.5, 0, 0, 0)
+				Textbox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Textbox
+
+				local Title = Instance.new("TextButton")
+				Title.Name = "Title" .. TitleT or "Unknown"
+				Title.Selectable = false
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.Active = false
+				Title.BorderSizePixel = 0
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextTransparency = 0.5
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Text = TitleT or "Unknown"
+				Title.Font = Enum.Font.GothamMedium
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+				Title.Parent = Textbox
+
+				local UIPadding = Instance.new("UIPadding")
+				UIPadding.PaddingLeft = UDim.new(0, 20)
+				UIPadding.PaddingRight = UDim.new(0, 20)
+				UIPadding.Parent = Title
+
+				local Textbox1 = Instance.new("TextBox")
+				Textbox1.Name = "Textbox"
+				Textbox1.Size = UDim2.new(0, 80, 0, 25)
+				Textbox1.BackgroundTransparency = 0.95
+				Textbox1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Textbox1.FontSize = Enum.FontSize.Size14
+				Textbox1.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+				Textbox1.TextSize = 14
+				Textbox1.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Textbox1.Text = Default or "Input"
+				Textbox1.PlaceholderText = "Text"
+				Textbox1.Font = Enum.Font.Gotham
+				Textbox1.Parent = Title
+
+				local UIStroke1 = Instance.new("UIStroke")
+				UIStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke1.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke1.Parent = Textbox1
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Textbox1
+
+				local UIListLayout = Instance.new("UIListLayout")
+				UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+				UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+				UIListLayout.Padding = UDim.new(0, 10)
+				UIListLayout.Parent = Title
+
+				local UICorner1 = Instance.new("UICorner")
+				UICorner1.CornerRadius = UDim.new(0, 20)
+				UICorner1.Parent = Textbox
+
+				Textbox1.FocusLost:Connect(function()
+					if #Textbox1.Text > 0.1 then
+						Callback(tostring(Textbox1.Text))
+					else
+						Textbox1.Text = tostring(Default)
+						Callback(tostring(Textbox1.Text))
+					end
+				end)
+			end
+			
+			function TabFuncs:Label(Text)
+				local Label = Instance.new("Frame")
+				Label.Name = "Label" .. Text or "Unknown"
+				Label.AnchorPoint = Vector2.new(0.5, 0)
+				Label.Size = UDim2.new(1, 0, 0, 35)
+				Label.Position = UDim2.new(0.5, 0, 0, 0)
+				Label.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Label
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Label
+
+				local Title = Instance.new("TextLabel")
+				Title.Name = "Title"
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.BorderSizePixel = 0
+				Title.TextTransparency = 0.5
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Font = Enum.Font.GothamMedium
+				Title.Text = Text or "Unknown"
+				Title.Parent = Label
+			end
+			
+			function TabFuncs:Toggle(TitleT, Default, Callback)
+				local Toggle = Instance.new("Frame", MainTabsFrame)
+				Toggle.Name = "Toggle" .. TitleT or "Unknown"
+				Toggle.AnchorPoint = Vector2.new(0.5, 0)
+				Toggle.Size = UDim2.new(1, 0, 0, 40)
+				Toggle.Position = UDim2.new(0.5, 0, 0, 0)
+				Toggle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+
+				local UIStroke = Instance.new("UIStroke")
+				UIStroke.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke.Parent = Toggle
+
+				local Title = Instance.new("TextButton")
+				Title.Name = "Title"
+				Title.Selectable = false
+				Title.Size = UDim2.new(1, 0, 1, 0)
+				Title.BackgroundTransparency = 1
+				Title.Active = false
+				Title.BorderSizePixel = 0
+				Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Title.FontSize = Enum.FontSize.Size18
+				Title.TextTransparency = 0.5
+				Title.TextSize = 15
+				Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Title.Text = TitleT or "Unknown"
+				Title.Font = Enum.Font.GothamMedium
+				Title.TextXAlignment = Enum.TextXAlignment.Left
+				Title.Parent = Toggle
+
+				local UIPadding = Instance.new("UIPadding")
+				UIPadding.PaddingLeft = UDim.new(0, 20)
+				UIPadding.PaddingRight = UDim.new(0, 20)
+				UIPadding.Parent = Title
+
+				local UIListLayout = Instance.new("UIListLayout")
+				UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+				UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+				UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+				UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+				UIListLayout.Padding = UDim.new(0, 10)
+				UIListLayout.Parent = Title
+
+				local Toggle1 = Instance.new("TextButton")
+				Toggle1.AutoButtonColor = false
+				Toggle1.Name = "Toggle"
+				Toggle1.Size = UDim2.new(0, 60, 0, 25)
+				Toggle1.BackgroundTransparency = 0.95
+				Toggle1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Toggle1.FontSize = Enum.FontSize.Size14
+				Toggle1.TextSize = 14
+				Toggle1.TextColor3 = Color3.fromRGB(255, 255, 255)
+				Toggle1.Text = ""
+				Toggle1.Font = Enum.Font.Gotham
+				Toggle1.Parent = Title
+
+				local UIStroke1 = Instance.new("UIStroke")
+				UIStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				UIStroke1.Color = Color3.fromRGB(85, 85, 255)
+				UIStroke1.Parent = Toggle1
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Toggle1
+
+				local UIPadding1 = Instance.new("UIPadding")
+				UIPadding1.PaddingLeft = UDim.new(0, 5)
+				UIPadding1.PaddingRight = UDim.new(0, 5)
+				UIPadding1.Parent = Toggle1
+
+				local UICorner1 = Instance.new("UICorner")
+				UICorner1.CornerRadius = UDim.new(0, 20)
+				UICorner1.Parent = Toggle1
+
+				local Circle = Instance.new("ImageLabel")
+				Circle.Name = "Circle"
+				Circle.AnchorPoint = Vector2.new(0, 0.5)
+				Circle.Size = UDim2.new(0, 18, 0, 18)
+				Circle.BackgroundTransparency = 1
+				Circle.Position = UDim2.new(0, 0, 0.5, 0)
+				Circle.BorderSizePixel = 0
+				Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Circle.Image = "rbxassetid://7072707153"
+				Circle.Parent = Toggle1
+
+				local UICorner2 = Instance.new("UICorner")
+				UICorner2.CornerRadius = UDim.new(0, 20)
+				UICorner2.Parent = Toggle
+				
+				Toggle1.MouseButton1Click:Connect(function()
+					if Circle.AnchorPoint == Vector2.new(0, 0.5) then
+						Tween:Create(Circle, TweenInfo.new(0.35), {AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0)}):Play()
+						Tween:Create(Toggle1, TweenInfo.new(0.35), {BackgroundColor3 = Color3.fromRGB(85, 85, 255), BackgroundTransparency = 0}):Play()
+
+						Callback(true)
+					elseif Circle.AnchorPoint == Vector2.new(1, 0.5) then
+						Tween:Create(Circle, TweenInfo.new(0.35), {AnchorPoint = Vector2.new(0, 0.5), Position = UDim2.new(0, 0, 0.5, 0), BackgroundColor3 = Color3.fromRGB(85, 85, 255)}):Play()
+						Tween:Create(Toggle1, TweenInfo.new(0.35), {BackgroundColor3 = Color3.fromRGB(25, 25, 25), BackgroundTransparency = 0.95}):Play()
+						
+						Callback(false)
+					end
+				end)
+			end
+			
+			function TabFuncs:Divider(Y)
+				local Divider = Instance.new("Frame", MainTabsFrame)
+				Divider.Name = "Divider"
+				Divider.Size = UDim2.new(1, 0, 0, Y or 5)
+				Divider.BorderSizePixel = 0
+				Divider.BackgroundColor3 = Color3.fromRGB(85, 85, 255)
+
+				local UICorner = Instance.new("UICorner")
+				UICorner.CornerRadius = UDim.new(0, 20)
+				UICorner.Parent = Divider
+			end
+			
+			return TabFuncs
+		end
+		
+		return CategoryFuncs
+	end
+	
+	function Window:AvFOV(Value)
+		if not Camera then return end
+		Camera.FieldOfView = Value or 70
+	end
+	
+	function Window:GetAvChar()
+		if not Character then return end
+	    return Character
+	end
+	
+	function Window:AddAvWidget(TitleText, Callback)
+		local Button = Instance.new("ImageButton", Widgets)
+		Button.Name = "Button" .. (TitleText or "Unknown")
+		Button.Size = UDim2.new(0, 20, 0, 20)
+		Button.BackgroundTransparency = 1
+		Button.BorderSizePixel = 0
+		Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Button.Image = "rbxassetid://7072725530"
+		
+		Button.MouseButton1Click:Connect(Callback)
+	end
+
+	return Window
+end
